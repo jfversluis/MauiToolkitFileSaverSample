@@ -1,24 +1,31 @@
-﻿namespace MauiToolkitFileSaverSample;
+﻿using CommunityToolkit.Maui.Storage;
+using System.Text;
+
+namespace MauiToolkitFileSaverSample;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
-
-	public MainPage()
+	IFileSaver fileSaver;
+	CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+	public MainPage(IFileSaver fileSaver)
 	{
 		InitializeComponent();
+		this.fileSaver = fileSaver;
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+	private async void OnCounterClicked(object sender, EventArgs e)
 	{
-		count++;
+		try
+		{
+			using var stream = new MemoryStream(Encoding.Default.GetBytes("Have you subscribed to this amazing channel yet?!"));
+			var path = await fileSaver.SaveAsync("subscribe.txt", stream, cancellationTokenSource.Token);
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+			fileSaverResult.Text = path;
+		}
+		catch
+		{
+			// Exception thrown when user cancels
+		}
+    }
 }
 

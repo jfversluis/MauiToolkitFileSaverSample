@@ -16,6 +16,7 @@
                 HorizontalOptions="Center" />
 
             <Label
+                x:Name="fileSaverResult"
                 Text="Hello, World!"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
